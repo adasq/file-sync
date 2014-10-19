@@ -8,16 +8,14 @@ cheerio = require('cheerio');
 var map = {
 	artists: [
 	{name: 'hardwell', id:'1afQOtEpRYDn1F130M8uhPueOae-shobGR04LDO-pAfo'},
-	{name: 'tiesto', id:'1-BztOm4fY7o-Liv-dqY7vCbpw5EALvEWLmkY1ZRBeiI'},
-	
+	{name: 'tiesto', id:'1-BztOm4fY7o-Liv-dqY7vCbpw5EALvEWLmkY1ZRBeiI'},	
 	]
 };
 
 var getDriveDocumentIdByArtistName = function(artistName){
 	var artist =  _.find(map.artists, function(artist){
-	return artist.name === artistName;
-});
-
+		return artist.name === artistName;
+	});
 	if(artist){
 		return artist.id
 	}else{
@@ -26,8 +24,7 @@ var getDriveDocumentIdByArtistName = function(artistName){
 };
 
 
-var GoogleDriveManager = function() {
-};
+var GoogleDriveManager = function() {};
 
 GoogleDriveManager.prototype.getByArtist = function(artistName){
 var deferred =q.defer();
@@ -39,7 +36,7 @@ var scheet = (JSON.parse(jsonString));
 var result = [];
 _.each(scheet.table.rows, function(row){
 result.push({
-	episode: row.c[0].v,
+	episode: row.c[0] && row.c[0].v,
 	zsLink: (row.c[2])?row.c[2].v:null
 })
 });

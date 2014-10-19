@@ -22,10 +22,12 @@ dbClass.prototype.saveFile= function(file){
  	}; 
 	var uploadUrl = this.FILE_PUT_URL+ (file.path || file.name);
  	
-  file.stream.pipe(request.post({
+var targetRequest = request.post({
   uri: uploadUrl,
   followRedirect: false, 
-  headers: this.headers}, callback));
+  headers: this.headers}, callback);
+
+  file.stream.pipe(targetRequest);
 
   return deferred.promise;
 };

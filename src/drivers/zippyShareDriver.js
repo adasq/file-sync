@@ -1,14 +1,15 @@
 var
 q = require('q'),
 util = require('util'),
-  vm = require('vm'),
+vm = require('vm'),
+progress = require('request-progress'),
 cheerio = require('cheerio'),
 request = require('request');
 
 var ZippyShareDriver = function(){
 };
 
-ZippyShareDriver.prototype.getFileByUrl = function(url){
+ZippyShareDriver.prototype.getFileByUrl = function(url, progressCallback){
 var deferred = q.defer();
 
 var server = url.match(/www[0-9]+\.zippy/g)[0];
@@ -33,6 +34,11 @@ var file = {
   stream: request({uri: link, jar: j, followRedirect: false}),
   name: fileName
 };
+progress(file.stream, {
+    throttle: 2000,  // Throttle the progress event to 2000ms, defaults to 1000ms
+    delay: 1000      // Only start to emit after 1000ms delay, defaults to 0ms
+})
+.on('progress', progressCallback);
 deferred.resolve(file)
 });
 return deferred.promise;
