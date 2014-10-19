@@ -1,6 +1,7 @@
 var
 request = require('request'),
 q = require('q'),
+URLManager = require('./utils/urlManager'),
 _= require('underscore'),
 cheerio = require('cheerio');
 
@@ -35,11 +36,27 @@ var jsonString = b.substr(39,b.length-39-2);
 var scheet = (JSON.parse(jsonString));
 var result = [];
 _.each(scheet.table.rows, function(row){
-result.push({
-	episode: row.c[0] && row.c[0].v,
-	zsLink: (row.c[2])?row.c[2].v:null
-})
+	var episodeObject = {
+		number: row.c[0] && row.c[0].v,
+		links: {}
+	};	
+	
+_.each(row.c, function(td, i){
+	if(!td || !td.v || i == 0)return;
+	var link = td.v;
+	var cloudService = URLManager.getCloudServiceByURL(link);
+	if(cloudService){
+		episodeObject.links[cloudService] = link;
+	}
 });
+result.push(episodeObject);
+// result.push({
+// 	episode: row.c[0] && row.c[0].v,
+// 	zsLink: (row.c[2])?row.c[2].v:null
+// });
+});
+
+
 deferred.resolve(result);
 });
 return deferred.promise;

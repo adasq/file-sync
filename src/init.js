@@ -7,23 +7,26 @@ _= require('underscore'),
 util = require('util'),
   vm = require('vm'),
 fs = require('fs'),
+URLManager = require('./utils/urlManager'),
 cheerio = require('cheerio'),
 GoogleDriveManager = require('./googleDriveManager'),
 ZippyShareDriver = require('./drivers/zippyShareDriver'),
 Mp3LiDriver = require('./drivers/mp3liDriver'),
 DropboxManager = require('./dropboxManager');
 
+var url = 'http://www56.zippyshare.com/v/67575502/file.html'
 
+console.log(URLManager.getCloudServiceByURL(url));
  
  var zippyDriver = new ZippyShareDriver();
  var dbManager = new DropboxManager(); 
  var googleDriveManager = new GoogleDriveManager();
 
-// var promise = googleDriveManager.getByArtist('tiesto');
-// promise.then(function(result){
-// 	console.log(result)
-// });
-// return;
+var promise = googleDriveManager.getByArtist('hardwell');
+promise.then(function(episodes){
+	console.log(episodes)
+});
+ return;
 
 
 // var url = 'http://mp3.li/download.php?d=EYTo0OntzOjE6ImgiO3M6MzI6ImUzNmZkMzc3NWNhYzRlMTQwMTZhMjgyNzBjOGQ1YmUyIjtzOjE6InQiO3M6NTA6IlRoZSBXYW50ZWQgLSBDaGFzaW5nIFRoZSBTdW4gKEhhcmR3ZWxsIFJhZGlvIEVkaXQpIjtzOjE6ImMiO2k6MTQxMzcxMDAzNjtzOjI6ImlwIjtzOjEyOiI4My4zMC43Ny4xMTMiO30=';
@@ -34,9 +37,7 @@ DropboxManager = require('./dropboxManager');
 // });
 
 
-var url = 'http://www56.zippyshare.com/v/67575502/file.html'
-//'http://www76.zippyshare.com/v/7854507/file.html'
-//'http://www59.zippyshare.com/v/3254582/file.html'
+
 var progressDownloadCallback = function(progress){
 	console.log('download',progress);
 }
