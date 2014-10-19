@@ -1,0 +1,20 @@
+{
+  "name": "ear-rape",
+  "version": "0.0.0",
+  "description": "keep your periodical music set / podcast synchronized",
+  "main": "init.js",
+  "scripts": {
+    "start": "node src/init.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "cheerio": "",
+    "dropbox": "",
+    "express": "3.x",
+    "q": "^1.0.1",
+    "request": "2.37.0",
+    "underscore": "^1.7.0"
+  },
+  "author": "adasq",
+  "license": "ISC"
+}
