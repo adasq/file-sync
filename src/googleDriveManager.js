@@ -9,7 +9,9 @@ cheerio = require('cheerio');
 var map = {
 	artists: [
 	{name: 'hardwell', id:'1afQOtEpRYDn1F130M8uhPueOae-shobGR04LDO-pAfo'},
-	{name: 'tiesto', id:'1-BztOm4fY7o-Liv-dqY7vCbpw5EALvEWLmkY1ZRBeiI'},	
+	{name: 'tiesto', id:'1-BztOm4fY7o-Liv-dqY7vCbpw5EALvEWLmkY1ZRBeiI'},
+	{name: 'doorn', id:'1inoW14Ibowtyg3AXfdhTENBq9Qgi6W-Mbqhfo-86Z6A'},	
+	
 	]
 };
 

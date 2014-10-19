@@ -8,6 +8,7 @@ util = require('util'),
   vm = require('vm'),
 fs = require('fs'),
 URLManager = require('./utils/urlManager'),
+CloudService = require('./utils/cloudService'),
 cheerio = require('cheerio'),
 GoogleDriveManager = require('./googleDriveManager'),
 ZippyShareDriver = require('./drivers/zippyShareDriver'),
@@ -22,11 +23,38 @@ console.log(URLManager.getCloudServiceByURL(url));
  var dbManager = new DropboxManager(); 
  var googleDriveManager = new GoogleDriveManager();
 
-var promise = googleDriveManager.getByArtist('hardwell');
-promise.then(function(episodes){
-	console.log(episodes)
+
+
+var getLatestEpisodeByArtist = function(artist){
+	var deferred = q.defer();
+	var promise = googleDriveManager.getByArtist(artist);
+	promise.then(function(episodes){
+		var latestEpisode = episodes[episodes.length-1];
+		if(latestEpisode){
+			deferred.resolve(latestEpisode);
+		}else{
+			deferred.reject();
+		}
+	});
+	return deferred.promise;
+};
+
+
+
+var promise = getLatestEpisodeByArtist('doorn');
+promise.then(function(latestEpisode){
+if(latestEpisode.links[CloudService.ZIPPYSHARE]){
+		var latestEpisodeLink = latestEpisode.links[CloudService.ZIPPYSHARE];	
+			console.log(latestEpisode.number, latestEpisodeLink);
+			downloadFileByUrlAndDriver(latestEpisodeLink, zippyDriver).then(function(result){
+				console.log(result.b)
+			});
+ }else{
+ 	console.log('not available for zippy :(')
+ }
 });
- return;
+
+
 
 
 // var url = 'http://mp3.li/download.php?d=EYTo0OntzOjE6ImgiO3M6MzI6ImUzNmZkMzc3NWNhYzRlMTQwMTZhMjgyNzBjOGQ1YmUyIjtzOjE6InQiO3M6NTA6IlRoZSBXYW50ZWQgLSBDaGFzaW5nIFRoZSBTdW4gKEhhcmR3ZWxsIFJhZGlvIEVkaXQpIjtzOjE6ImMiO2k6MTQxMzcxMDAzNjtzOjI6ImlwIjtzOjEyOiI4My4zMC43Ny4xMTMiO30=';
@@ -36,20 +64,24 @@ promise.then(function(episodes){
 // //file.stream.pipe(fs.createWriteStream(file.name));
 // });
 
+var downloadFileByUrlAndDriver = function(url, driver){
+	var deferred = q.defer();
+	var progressDownloadCallback = function(progress){
+		console.log('downloading',progress);
+	}
+	var getFilePromise= driver.getFileByUrl(url, progressDownloadCallback);
+	getFilePromise.then(function(file){
+		console.log(file.name);
+		//file.stream.pipe(fs.createWriteStream(file.name));
+		var uploadFilePromise = dbManager.saveFile(file);
+		uploadFilePromise.then(function(response){
+		  deferred.resolve(response);
+		});//saveFile
+	});//getFilePromise
+	return deferred.promise;
+};
 
 
-var progressDownloadCallback = function(progress){
-	console.log('download',progress);
-}
-var getFilePromise= zippyDriver.getFileByUrl(url, progressDownloadCallback);
-getFilePromise.then(function(file){
-console.log(file.name);
-//file.stream.pipe(fs.createWriteStream(file.name));
-var uploadFilePromise = dbManager.saveFile(file);
-uploadFilePromise.then(function(response){
-  console.log(response.b)
-});//saveFile
-});//getFilePromise
 
 
 
