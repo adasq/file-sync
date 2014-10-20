@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "keep your periodical music set / podcast synchronized",
   "main": "init.js",
+    "engines": {
+    "node": "0.10.29"
+  },
   "scripts": {
     "start": "node src/init.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,6 +13,8 @@
   "devDependencies": {
     "cheerio": "",
     "dropbox": "",
+    "mongoose": "",
+    "connect-mongo": "",
     "express": "3.x",
     "q": "^1.0.1",
     "request": "2.37.0",
